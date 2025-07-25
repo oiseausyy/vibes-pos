@@ -384,7 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Default data, will be overwritten by localStorage if available
         users: [
             { pin: '1234', role: 'staff', name: 'พนักงาน A' },
-            { pin: '0000', role: 'admin', name: 'ผู้ดูแลระบบ' }
+            { pin: '0000', role: 'admin', name: 'ผู้ดูแลระบบ' },
+            { pin: '1828', role: 'admin', name: 'nattanan.nont' }
         ],
         menu: {
             'เมนูกาแฟ': [
@@ -624,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const receiptContent = `
          รายงานสรุปยอดขาย
 ==============================
-ร้าน: VIBES
+ร้าน: VIBES COFFEE
 รอบวันที่: ${new Date(state.shiftData.startTime).toLocaleDateString('th-TH')}
 เปิดรอบโดย: ${state.shiftData.openedBy}
 เวลา: ${new Date(state.shiftData.startTime).toLocaleTimeString('th-TH')} - ${new Date().toLocaleTimeString('th-TH')}
@@ -918,7 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const receiptContent = `
         ใบเสร็จรับเงิน/ใบกำกับภาษีอย่างย่อ
-            ร้าน VIBES
+            ร้าน VIBES COFFEE
 --------------------------------
 ID: ${receipt.id}
 พนักงาน: ${receipt.employee}
