@@ -9,7 +9,15 @@
     <style>
         /* --- Custom Styles & "Minimal Earth Tone" Theme --- */
         :root {
-            --bg-main: #FDFBF5;         /* Very light, clean beige */
+            --bg-main: #cac5bc;
+            --bg-panel: #b1ab97;
+            --bg-input: #cac5bc;
+            --text-primary: #4c6783;
+            --text-secondary: #728ca3;
+            --accent-primary: #4c6783;
+            --accent-secondary: #728ca3;
+            --accent-danger: #c46d5e;
+            --border-color: #b1ab97;
             --bg-panel: #EAE7DC;        /* Muted beige for panels */
             --bg-input: #F5F3ED;        /* Light input background */
             --text-primary: #4E4B42;    /* Warm charcoal */
@@ -241,7 +249,14 @@
                 <li><a href="#" class="sidebar-item flex items-center p-3 rounded-lg" data-page="sales-shift-page"><svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg> รอบการขาย</a></li>
                 <hr class="border-gray-700 my-2">
                 <li><a href="#" class="sidebar-item flex items-center p-3 rounded-lg" data-page="sales-report-page"><svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> VIBES sales report</a></li>
-            </ul>
+            
+<li><a href="#" class="sidebar-item flex items-center p-3 rounded-lg" data-page="stock-page">
+    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"></path>
+    </svg> สต็อคอะไหล่
+</a></li>
+
+</ul>
             <button id="logout-btn" class="w-full p-3 rounded-lg text-lg secondary-btn mt-4">กลับหน้าแรก</button>
         </nav>
 
@@ -254,7 +269,20 @@
                 </div>
                 <div class="w-96 flex-shrink-0 night-panel rounded-2xl flex flex-col p-4">
                     <h3 class="text-2xl font-bold mb-4 text-center">รายการสั่งซื้อ</h3>
-                    <div id="cart-items" class="flex-grow overflow-y-auto pr-2"><p class="text-muted text-center mt-10">ยังไม่มีรายการ</p></div>
+                    
+<div class="mb-4">
+    <label class="block text-sm font-medium mb-1">รุ่นที่ซ่อม</label>
+    <input type="text" class="w-full p-2 rounded-lg border" placeholder="เช่น iPhone 12">
+</div>
+<div class="mb-4">
+    <label class="block text-sm font-medium mb-1">รายละเอียด</label>
+    <textarea class="w-full p-2 rounded-lg border" rows="2" placeholder="เช่น เปลี่ยนจอ, เครื่องดับ ฯลฯ"></textarea>
+</div>
+<div class="mb-4">
+    <label class="block text-sm font-medium mb-1">ราคาค่าบริการ</label>
+    <input type="number" class="w-full p-2 rounded-lg border" placeholder="เช่น 1500">
+</div>
+<div id="cart-items" class="flex-grow overflow-y-auto pr-2"><p class="text-muted text-center mt-10">ยังไม่มีรายการ</p></div>
                     <div class="border-t border-gray-700 pt-4 mt-4">
                         <div class="flex justify-between text-lg mb-2">
                             <span>ส่วนลด</span>
@@ -277,7 +305,31 @@
             <div id="receipt-history-page" class="page hidden"><h1 class="text-3xl font-bold mb-6">ประวัติใบเสร็จ (30 วันล่าสุด)</h1><div id="receipt-history-list" class="space-y-4"></div></div>
             <div id="sales-report-page" class="page hidden"><h1 class="text-3xl font-bold mb-6">VIBES Sales Report</h1><div class="flex gap-4 mb-8"><button id="show-monthly-report-btn" class="p-4 rounded-lg font-bold neon-btn flex-1">รายการประวัติรายเดือน</button><button id="show-daily-report-btn" class="p-4 rounded-lg font-semibold secondary-btn flex-1">ประวัติรายวัน (ใบเสร็จ)</button></div><div id="monthly-report-container" class="night-panel p-6 rounded-2xl"><h2 class="text-2xl font-bold mb-4">สรุปยอดขายรายเดือน</h2><div id="monthly-report-content"><p class="text-muted">ไม่มีข้อมูลการขาย</p></div></div></div>
             <div id="sales-shift-page" class="page hidden night-panel p-6 rounded-2xl max-w-4xl mx-auto"><div class="flex justify-between items-center mb-6"><h1 class="text-3xl font-bold">รอบการขายปัจจุบัน</h1><div class="flex gap-4"><button id="cash-in-out-btn" class="p-3 rounded-lg font-semibold secondary-btn">เงินเข้า / เงินออก</button><button id="close-shift-btn" class="p-3 rounded-lg font-bold danger-btn">ปิดยอดขาย</button></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6"><div class="bg-gray-900 p-4 rounded-lg"><p class="text-muted">เวลาเปิดรอบ</p><p id="shift-start-time" class="text-xl font-semibold">-</p></div><div class="bg-gray-900 p-4 rounded-lg"><p class="text-muted">เงินสดเริ่มต้น</p><p id="shift-start-cash" class="text-xl font-semibold">-</p></div><div class="bg-gray-900 p-4 rounded-lg"><p class="text-muted">ยอดขายเงินสด</p><p id="shift-cash-sales" class="text-xl font-semibold">-</p></div></div><h2 class="text-2xl font-bold mb-4">รายการเงินเข้า/ออก</h2><div id="cash-transactions-list" class="bg-gray-900 p-4 rounded-lg h-64 overflow-y-auto"><p class="text-gray-500 text-center">ไม่มีรายการ</p></div></div>
-        </main>
+        
+<div id="stock-page" class="page hidden night-panel p-6 rounded-2xl max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">สต็อคอะไหล่</h1>
+    <p class="text-muted mb-4">ในอนาคตคุณสามารถเพิ่ม/นำออกอะไหล่ได้ที่นี่ พร้อมสรุปกราฟ</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Sample entries -->
+        <div class="p-4 rounded-lg border border-gray-500 bg-white text-black">
+            <p class="font-semibold">จอ iPhone 12</p>
+            <p class="text-sm">คงเหลือ: 5 ชิ้น</p>
+            <span class="inline-block px-2 py-1 text-sm bg-green-500 text-white rounded-full">ปกติ</span>
+        </div>
+        <div class="p-4 rounded-lg border border-gray-500 bg-white text-black">
+            <p class="font-semibold">แบตเตอรี่ Samsung A32</p>
+            <p class="text-sm">คงเหลือ: 2 ชิ้น</p>
+            <span class="inline-block px-2 py-1 text-sm bg-yellow-500 text-white rounded-full">ใกล้หมด</span>
+        </div>
+        <div class="p-4 rounded-lg border border-gray-500 bg-white text-black">
+            <p class="font-semibold">ทัชสกรีน OPPO A5</p>
+            <p class="text-sm">คงเหลือ: 0 ชิ้น</p>
+            <span class="inline-block px-2 py-1 text-sm bg-red-500 text-white rounded-full">หมด</span>
+        </div>
+    </div>
+</div>
+
+</main>
     </div>
 
     <!-- Admin Page -->
@@ -348,7 +400,31 @@
                     </div>
                 </div>
             </div>
-        </main>
+        
+<div id="stock-page" class="page hidden night-panel p-6 rounded-2xl max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">สต็อคอะไหล่</h1>
+    <p class="text-muted mb-4">ในอนาคตคุณสามารถเพิ่ม/นำออกอะไหล่ได้ที่นี่ พร้อมสรุปกราฟ</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Sample entries -->
+        <div class="p-4 rounded-lg border border-gray-500 bg-white text-black">
+            <p class="font-semibold">จอ iPhone 12</p>
+            <p class="text-sm">คงเหลือ: 5 ชิ้น</p>
+            <span class="inline-block px-2 py-1 text-sm bg-green-500 text-white rounded-full">ปกติ</span>
+        </div>
+        <div class="p-4 rounded-lg border border-gray-500 bg-white text-black">
+            <p class="font-semibold">แบตเตอรี่ Samsung A32</p>
+            <p class="text-sm">คงเหลือ: 2 ชิ้น</p>
+            <span class="inline-block px-2 py-1 text-sm bg-yellow-500 text-white rounded-full">ใกล้หมด</span>
+        </div>
+        <div class="p-4 rounded-lg border border-gray-500 bg-white text-black">
+            <p class="font-semibold">ทัชสกรีน OPPO A5</p>
+            <p class="text-sm">คงเหลือ: 0 ชิ้น</p>
+            <span class="inline-block px-2 py-1 text-sm bg-red-500 text-white rounded-full">หมด</span>
+        </div>
+    </div>
+</div>
+
+</main>
     </div>
     
     <!-- MODALS -->
