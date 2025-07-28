@@ -5,7 +5,54 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+// ✅ Custom Stock Logic
+function renderStockList() {
+    const container = document.getElementById("stock-list");
+    if (!container) return;
+    container.innerHTML = "";
+    state.stockParts.forEach(part => {
+        const status = part.quantity === 0 ? 'หมด' :
+                       part.quantity <= 2 ? 'ใกล้หมด' : 'ปกติ';
+        const color = status === 'หมด' ? 'bg-red-500' :
+                      status === 'ใกล้หมด' ? 'bg-yellow-500' : 'bg-green-500';
+        const el = document.createElement('div');
+        el.className = "p-4 rounded-lg border border-gray-500 bg-white text-black";
+        el.innerHTML = `
+            <p class="font-semibold">${part.name}</p>
+            <p class="text-sm">คงเหลือ: ${part.quantity} ชิ้น</p>
+            <p class="text-xs text-gray-600">อัปเดตล่าสุด: ${new Date(part.updatedAt).toLocaleString('th-TH')}</p>
+            <span class="inline-block px-2 py-1 text-sm ${color} text-white rounded-full">${status}</span>
+        `;
+        container.appendChild(el);
+    });
+}
+
+document.getElementById("update-stock-btn")?.addEventListener("click", () => {
+    const name = document.getElementById("part-name-input").value.trim();
+    const qty = parseInt(document.getElementById("part-quantity-input").value);
+    const action = document.getElementById("part-action-input").value;
+    if (!name || isNaN(qty)) {
+        alert("กรุณากรอกชื่ออะไหล่และจำนวนให้ครบ");
+        return;
+    }
+    const now = new Date().toISOString();
+    const part = state.stockParts.find(p => p.name === name);
+    if (part) {
+        part.quantity += (action === "add" ? qty : -qty);
+        if (part.quantity < 0) part.quantity = 0;
+        part.updatedAt = now;
+    } else {
+        state.stockParts.push({ name, quantity: action === "add" ? qty : 0, updatedAt: now });
+    }
+    renderStockList();
+    document.getElementById("part-name-input").value = "";
+    document.getElementById("part-quantity-input").value = "";
+    localStorage.setItem('vibes_pos_stockParts', JSON.stringify(state.stockParts));
+});
+renderStockList();
+
+</script>
     <style>
         /* --- Custom Styles & "Minimal Earth Tone" Theme --- */
         :root {
@@ -309,7 +356,22 @@
 <div id="stock-page" class="page hidden night-panel p-6 rounded-2xl max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">สต็อคอะไหล่</h1>
     <p class="text-muted mb-4">ในอนาคตคุณสามารถเพิ่ม/นำออกอะไหล่ได้ที่นี่ พร้อมสรุปกราฟ</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    
+<!-- 🔧 Stock Parts Management Section -->
+<div class="mb-6 p-4 rounded-lg bg-white text-black border border-gray-500">
+    <h2 class="text-xl font-bold mb-2">เพิ่ม/ถอนอะไหล่</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input id="part-name-input" type="text" placeholder="ชื่ออะไหล่ เช่น จอ iPhone 12" class="p-2 border rounded">
+        <input id="part-quantity-input" type="number" placeholder="จำนวน" class="p-2 border rounded">
+        <select id="part-action-input" class="p-2 border rounded">
+            <option value="add">เพิ่มเข้า</option>
+            <option value="remove">ถอนออก</option>
+        </select>
+    </div>
+    <button id="update-stock-btn" class="mt-4 p-2 neon-btn rounded">บันทึกการเปลี่ยนแปลง</button>
+</div>
+<div id="stock-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
         <!-- Sample entries -->
         <div class="p-4 rounded-lg border border-gray-500 bg-white text-black">
             <p class="font-semibold">จอ iPhone 12</p>
@@ -327,10 +389,10 @@
             <span class="inline-block px-2 py-1 text-sm bg-red-500 text-white rounded-full">หมด</span>
         </div>
     </div>
-</div>
+</main></div>
 
-</main>
-    </div>
+
+    
 
     <!-- Admin Page -->
     <div id="admin-page" class="page hidden h-full w-full flex flex-col">
@@ -404,7 +466,22 @@
 <div id="stock-page" class="page hidden night-panel p-6 rounded-2xl max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">สต็อคอะไหล่</h1>
     <p class="text-muted mb-4">ในอนาคตคุณสามารถเพิ่ม/นำออกอะไหล่ได้ที่นี่ พร้อมสรุปกราฟ</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    
+<!-- 🔧 Stock Parts Management Section -->
+<div class="mb-6 p-4 rounded-lg bg-white text-black border border-gray-500">
+    <h2 class="text-xl font-bold mb-2">เพิ่ม/ถอนอะไหล่</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input id="part-name-input" type="text" placeholder="ชื่ออะไหล่ เช่น จอ iPhone 12" class="p-2 border rounded">
+        <input id="part-quantity-input" type="number" placeholder="จำนวน" class="p-2 border rounded">
+        <select id="part-action-input" class="p-2 border rounded">
+            <option value="add">เพิ่มเข้า</option>
+            <option value="remove">ถอนออก</option>
+        </select>
+    </div>
+    <button id="update-stock-btn" class="mt-4 p-2 neon-btn rounded">บันทึกการเปลี่ยนแปลง</button>
+</div>
+<div id="stock-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
         <!-- Sample entries -->
         <div class="p-4 rounded-lg border border-gray-500 bg-white text-black">
             <p class="font-semibold">จอ iPhone 12</p>
@@ -422,10 +499,10 @@
             <span class="inline-block px-2 py-1 text-sm bg-red-500 text-white rounded-full">หมด</span>
         </div>
     </div>
-</div>
+</main></div>
 
-</main>
-    </div>
+
+    
     
     <!-- MODALS -->
     <div id="admin-pin-modal" class="modal-backdrop hidden">
@@ -507,6 +584,11 @@ document.addEventListener('DOMContentLoaded', () => {
         currentDiscount: 0,
         voidTargetReceiptId: null,
         
+        stockParts: [
+        { name: "จอ iPhone 12", quantity: 5, updatedAt: new Date().toISOString() },
+        { name: "แบตเตอรี่ Samsung A32", quantity: 2, updatedAt: new Date().toISOString() },
+        { name: "ทัชสกรีน OPPO A5", quantity: 0, updatedAt: new Date().toISOString() }
+    ],
         // Default data, will be overwritten by localStorage if available
         users: [
             { pin: '1234', role: 'staff', name: 'พนักงาน A' },
@@ -543,6 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('vibes_pos_menu', JSON.stringify(state.menu));
         localStorage.setItem('vibes_pos_receiptSettings', JSON.stringify(state.receiptSettings));
         localStorage.setItem('vibes_pos_receiptHistory', JSON.stringify(state.receiptHistory));
+        localStorage.setItem('vibes_pos_stockParts', JSON.stringify(state.stockParts));
         localStorage.setItem('vibes_pos_allTimeSalesData', JSON.stringify(state.allTimeSalesData));
     }
 
@@ -551,12 +634,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const menu = localStorage.getItem('vibes_pos_menu');
         const receiptSettings = localStorage.getItem('vibes_pos_receiptSettings');
         const receiptHistory = localStorage.getItem('vibes_pos_receiptHistory');
+        const stockParts = localStorage.getItem('vibes_pos_stockParts');
         const allTimeSalesData = localStorage.getItem('vibes_pos_allTimeSalesData');
 
         if (users) state.users = JSON.parse(users);
         if (menu) state.menu = JSON.parse(menu);
         if (receiptSettings) state.receiptSettings = JSON.parse(receiptSettings);
         if (receiptHistory) state.receiptHistory = JSON.parse(receiptHistory);
+        if (stockParts) state.stockParts = JSON.parse(stockParts);
         if (allTimeSalesData) state.allTimeSalesData = JSON.parse(allTimeSalesData);
     }
 
@@ -1535,6 +1620,53 @@ ${itemsText}
 
     initialize();
 });
+
+// ✅ Custom Stock Logic
+function renderStockList() {
+    const container = document.getElementById("stock-list");
+    if (!container) return;
+    container.innerHTML = "";
+    state.stockParts.forEach(part => {
+        const status = part.quantity === 0 ? 'หมด' :
+                       part.quantity <= 2 ? 'ใกล้หมด' : 'ปกติ';
+        const color = status === 'หมด' ? 'bg-red-500' :
+                      status === 'ใกล้หมด' ? 'bg-yellow-500' : 'bg-green-500';
+        const el = document.createElement('div');
+        el.className = "p-4 rounded-lg border border-gray-500 bg-white text-black";
+        el.innerHTML = `
+            <p class="font-semibold">${part.name}</p>
+            <p class="text-sm">คงเหลือ: ${part.quantity} ชิ้น</p>
+            <p class="text-xs text-gray-600">อัปเดตล่าสุด: ${new Date(part.updatedAt).toLocaleString('th-TH')}</p>
+            <span class="inline-block px-2 py-1 text-sm ${color} text-white rounded-full">${status}</span>
+        `;
+        container.appendChild(el);
+    });
+}
+
+document.getElementById("update-stock-btn")?.addEventListener("click", () => {
+    const name = document.getElementById("part-name-input").value.trim();
+    const qty = parseInt(document.getElementById("part-quantity-input").value);
+    const action = document.getElementById("part-action-input").value;
+    if (!name || isNaN(qty)) {
+        alert("กรุณากรอกชื่ออะไหล่และจำนวนให้ครบ");
+        return;
+    }
+    const now = new Date().toISOString();
+    const part = state.stockParts.find(p => p.name === name);
+    if (part) {
+        part.quantity += (action === "add" ? qty : -qty);
+        if (part.quantity < 0) part.quantity = 0;
+        part.updatedAt = now;
+    } else {
+        state.stockParts.push({ name, quantity: action === "add" ? qty : 0, updatedAt: now });
+    }
+    renderStockList();
+    document.getElementById("part-name-input").value = "";
+    document.getElementById("part-quantity-input").value = "";
+    localStorage.setItem('vibes_pos_stockParts', JSON.stringify(state.stockParts));
+});
+renderStockList();
+
 </script>
 
 
